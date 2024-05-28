@@ -2,32 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+html,
+body {
+  height: 100vh;
 }
 
-@media (prefers-color-scheme: dark) {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 216 100% 98.04%;
+    --foreground: 213.6 100% 4.9%;
+
+    --primary: 264.12 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --card: 216 100% 98.04%;
+    --card-foreground: 213.6 100% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213.6 100% 4.9%;
+
+    --secondary: 214.74 100% 92.55%;
+    --secondary-foreground: 216 100% 0.98%;
+
+    --muted: 213.6 100% 95.1%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 213.6 100% 95.1%;
+    --accent-foreground: 214.12 100% 50%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 90.2%;
+    --input: 0 0% 90.2%;
+    --ring: 214.12 100% 50%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: #7f7fd5;
+
+    --background: 255 33.15% 5.36%;
+    --foreground: 255 5.1% 98.35%;
+
+    --muted: 255 25.5% 20.1%;
+    --muted-foreground: 255 5.1% 56.7%;
+
+    --popover: 255 54.8% 8.71%;
+    --popover-foreground: 255 5.1% 98.35%;
+
+    --card: 255 54.8% 8.71%;
+    --card-foreground: 255 5.1% 98.35%;
+
+    --border: 255 25.5% 20.1%;
+    --input: 255 25.5% 20.1%;
+
+    --primary: 255 51% 67%;
+    --primary-foreground: 255 5.1% 6.7%;
+
+    --secondary: 255 25.5% 20.1%;
+    --secondary-foreground: 255 5.1% 98.35%;
+
+    --accent: 255 25.5% 20.1%;
+    --accent-foreground: 255 5.1% 98.35%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 255 5.1% 98.35%;
+
+    --ring: 255 51% 67%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.dotPattern {
+  background-image: radial-gradient(rgb(35, 40, 68) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.use-automation-zoom-in {
+  animation: automation-zoom-in 0.5s;
+}
+
+@keyframes automation-zoom-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
