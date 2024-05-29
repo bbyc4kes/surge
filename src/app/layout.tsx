@@ -1,11 +1,8 @@
 import type { Metadata } from 'next'
-import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin'
-import { extractRouterConfig } from 'uploadthing/server'
 import { DM_Sans as FontSans } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider'
-import { ourFileRouter } from './api/upload-thing/core'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -37,7 +34,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
         </ThemeProvider>
       </body>
