@@ -1,6 +1,5 @@
 # <p align="center">Surge</p>
 
-![image](https://github.com/bbyc4kes/surge/assets/153362892/407a539f-e3e3-42ce-842b-39c15c24ca29)
 ### <p align="center">Surge is a SaaS website builder built using Next.js 14, Tailwind CSS, MySQL, Prisma, and Clerk for authentication. Surge offers its services at a fair price, integrated with Stripe to allow users to create and deploy their own SaaS websites with ease.</p>
 
 
