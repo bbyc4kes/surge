@@ -1,3 +1,4 @@
+import AgencyDetails from '@/components/forms/agency-details/agency-details'
 import NotAuthorized from '@/components/shared/not-authorized'
 import { getAuthUserDetails, verifyAndAccessInvitation } from '@/lib/queries'
 import { currentUser } from '@clerk/nextjs/server'
@@ -37,9 +38,9 @@ const Page = async ({
       }
 
       return redirect(`/agency/${agencyId}`)
+    } else {
+      return <NotAuthorized />
     }
-  } else {
-    return <NotAuthorized />
   }
 
   const authUser = await currentUser()
@@ -47,9 +48,9 @@ const Page = async ({
     <div className="flex justify-center items-center mt-4">
       <div className="max-w-[850px] border-[1px] p-4 rounded-xl">
         <h1 className="text-4xl"> Create An Agency</h1>
-        {/* <AgencyDetails
+        <AgencyDetails
           data={{ companyEmail: authUser?.emailAddresses[0].emailAddress }}
-        /> */}
+        />
       </div>
     </div>
   )
