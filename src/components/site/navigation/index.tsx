@@ -18,16 +18,16 @@ const Navigation = ({ user }: Props) => {
       <nav className="hidden md:block absolute left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]">
         <ul className="flex gap-8 items-center justify-center">
           <li>
-            <Link href="#services">Pricing</Link>
+            <Link href="#">Pricing</Link>
           </li>
           <li>
-            <Link href="#portfolio">Documentation</Link>
+            <Link href="#">Documentation</Link>
           </li>
           <li>
-            <Link href="#about">About</Link>
+            <Link href="#">About</Link>
           </li>
           <li>
-            <Link href="#contact">Services</Link>
+            <Link href="#">Services</Link>
           </li>
         </ul>
       </nav>
