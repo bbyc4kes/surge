@@ -1,6 +1,6 @@
-import AgencyDetails from '@/components/forms/agency-details/agency-details'
+import AgencyDetails from '@/components/forms/agency-details'
 import NotAuthorized from '@/components/shared/not-authorized'
-import { getAuthUserDetails, verifyAndAccessInvitation } from '@/lib/queries'
+import { getAuthUserDetails, verifyAndAcceptInvitation } from '@/lib/queries'
 import { currentUser } from '@clerk/nextjs/server'
 import { Plan } from '@prisma/client'
 import { redirect } from 'next/navigation'
@@ -11,7 +11,7 @@ const Page = async ({
 }: {
   searchParams: { plan: Plan; state: string; code: string }
 }) => {
-  const agencyId = await verifyAndAccessInvitation()
+  const agencyId = await verifyAndAcceptInvitation()
   const user = await getAuthUserDetails()
 
   if (agencyId) {

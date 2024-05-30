@@ -3,7 +3,8 @@
 import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import { prisma } from './db'
 import { redirect } from 'next/navigation'
-import { Agency, Plan, User } from '@prisma/client'
+import { Agency, Plan, SubAccount, User } from '@prisma/client'
+import { v4 } from 'uuid'
 
 export const getAuthUserDetails = async () => {
   const authUser = await currentUser()
@@ -129,7 +130,20 @@ export const saveActivityLogsNotification = async ({
   }
 }
 
-export const verifyAndAccessInvitation = async () => {
+export const _getTicketsWithAllRelations = async (laneId: string) => {
+  const response = await prisma.ticket.findMany({
+    where: { laneId: laneId },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Lane: true,
+      Tags: true,
+    },
+  })
+  return response
+}
+
+export const verifyAndAcceptInvitation = async () => {
   const authUser = await currentUser()
 
   if (!authUser) {
@@ -183,6 +197,21 @@ export const verifyAndAccessInvitation = async () => {
   }
 }
 
+export const getNotificationAndUser = async (agencyId: string) => {
+  try {
+    const response = await prisma.notification.findMany({
+      where: { agencyId },
+      include: { User: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const deleteAgency = async (agencyId: string) => {
   const response = await prisma.agency.delete({ where: { id: agencyId } })
   return response
@@ -222,6 +251,86 @@ export const updateAgencyDetails = async (
   const response = await prisma.agency.update({
     where: { id: agencyId },
     data: { ...agencyDetails },
+  })
+  return response
+}
+
+export const upsertSubAccount = async (subAccount: SubAccount) => {
+  if (!subAccount.companyEmail) return null
+  const agencyOwner = await prisma.user.findFirst({
+    where: {
+      Agency: {
+        id: subAccount.agencyId,
+      },
+      role: 'AGENCY_OWNER',
+    },
+  })
+  if (!agencyOwner) return console.log('🔴Erorr could not create subaccount')
+  const permissionId = v4()
+  const response = await prisma.subAccount.upsert({
+    where: { id: subAccount.id },
+    update: subAccount,
+    create: {
+      ...subAccount,
+      Permissions: {
+        create: {
+          access: true,
+          email: agencyOwner.email,
+          id: permissionId,
+        },
+        connect: {
+          subAccountId: subAccount.id,
+          id: permissionId,
+        },
+      },
+      Pipeline: {
+        create: { name: 'Lead Cycle' },
+      },
+      SidebarOption: {
+        create: [
+          {
+            name: 'Launchpad',
+            icon: 'clipboardIcon',
+            link: `/subaccount/${subAccount.id}/launchpad`,
+          },
+          {
+            name: 'Settings',
+            icon: 'settings',
+            link: `/subaccount/${subAccount.id}/settings`,
+          },
+          {
+            name: 'Funnels',
+            icon: 'pipelines',
+            link: `/subaccount/${subAccount.id}/funnels`,
+          },
+          {
+            name: 'Media',
+            icon: 'database',
+            link: `/subaccount/${subAccount.id}/media`,
+          },
+          {
+            name: 'Automations',
+            icon: 'chip',
+            link: `/subaccount/${subAccount.id}/automations`,
+          },
+          {
+            name: 'Pipelines',
+            icon: 'flag',
+            link: `/subaccount/${subAccount.id}/pipelines`,
+          },
+          {
+            name: 'Contacts',
+            icon: 'person',
+            link: `/subaccount/${subAccount.id}/contacts`,
+          },
+          {
+            name: 'Dashboard',
+            icon: 'category',
+            link: `/subaccount/${subAccount.id}`,
+          },
+        ],
+      },
+    },
   })
   return response
 }

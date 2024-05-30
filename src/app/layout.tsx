@@ -6,6 +6,9 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { ourFileRouter } from './api/uploadthing/core'
+import ModalProvider from '@/providers/modal-provider'
+import { Toaster } from '@/components/ui/toaster'
+import { Toaster as SonnarToaster } from '@/components/ui/sonner'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -38,7 +41,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          {children}
+          <ModalProvider>
+            {children}
+            <Toaster />
+            <SonnarToaster position="bottom-left" />
+          </ModalProvider>
         </ThemeProvider>
       </body>
     </html>
