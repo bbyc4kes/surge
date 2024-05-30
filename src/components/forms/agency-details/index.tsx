@@ -161,7 +161,7 @@ const AgencyDetails = ({ data }: Props) => {
         goal: 5,
       })
       toast({
-        title: 'Created Agency',
+        title: 'You have successfully saved your Agency',
       })
       if (data?.id) return router.refresh()
       if (response) {
@@ -401,7 +401,7 @@ const AgencyDetails = ({ data }: Props) => {
                   />
                 </div>
               )}
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} className="p-2">
                 {isLoading ? <Loading /> : 'Save Agency Information'}
               </Button>
             </form>

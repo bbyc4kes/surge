@@ -1,6 +1,10 @@
 import Stripe from 'stripe'
 import { Prisma, Role } from '@prisma/client'
-import { _getTicketsWithAllRelations } from './queries'
+import {
+  _getTicketsWithAllRelations,
+  getAuthUserDetails,
+  getUserPermissions,
+} from './queries'
 
 export type NotificationWithUser =
   | ({
@@ -21,3 +25,10 @@ export type TicketDetails = Prisma.PromiseReturnType<
   typeof _getTicketsWithAllRelations
 >
 export type PricesList = Stripe.ApiList<Stripe.Price>
+
+export type AuthUserWithAgencySigebarOptionsSubAccounts =
+  Prisma.PromiseReturnType<typeof getAuthUserDetails>
+
+export type UserWithPermissionsAndSubAccounts = Prisma.PromiseReturnType<
+  typeof getUserPermissions
+>
