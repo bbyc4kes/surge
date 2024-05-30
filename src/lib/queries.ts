@@ -129,7 +129,7 @@ export const saveActivityLogsNotification = async ({
   }
 }
 
-export const verifyAndAccessInvitation = async () => {
+export const verifyAndAcceptInvitation = async () => {
   const authUser = await currentUser()
 
   if (!authUser) {
@@ -180,6 +180,21 @@ export const verifyAndAccessInvitation = async () => {
       },
     })
     return agency ? agency.agencyId : null
+  }
+}
+
+export const getNotificationAndUser = async (agencyId: string) => {
+  try {
+    const response = await prisma.notification.findMany({
+      where: { agencyId },
+      include: { User: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    return response
+  } catch (error) {
+    console.log(error)
   }
 }
 
