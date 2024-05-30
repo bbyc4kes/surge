@@ -13,6 +13,7 @@ import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
 import clsx from 'clsx'
 import { AspectRatio } from '../ui/aspect-ratio'
 import Image from 'next/image'
+import { useModal } from '@/providers/modal-provider'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import {
   Command,
@@ -25,6 +26,8 @@ import {
 import Link from 'next/link'
 import { Separator } from '../ui/separator'
 import { icons } from '@/lib/constants'
+import CustomModal from '../shared/custom-modal'
+import SubAccountDetails from '../forms/subaccount-details'
 
 type Props = {
   defaultOpen?: boolean
@@ -220,27 +223,29 @@ const MenuOptions = ({
                 </CommandList>
                 {(user?.role === 'AGENCY_OWNER' ||
                   user?.role === 'AGENCY_ADMIN') && (
-                  <SheetClose>
-                    <Button
-                      className="w-full flex gap-2"
-                      onClick={() => {
-                        setOpen(
-                          <CustomModal
-                            title="Create A Subaccount"
-                            subheading="You can switch between your agency account and the subaccount from the sidebar"
-                          >
-                            <SubAccountDetails
-                              agencyDetails={user?.Agency as Agency}
-                              userId={user?.id as string}
-                              userName={user?.name}
-                            />
-                          </CustomModal>
-                        )
-                      }}
-                    >
-                      <PlusCircleIcon size={15} />
-                      Create Sub Account
-                    </Button>
+                  <SheetClose
+                    className="w-full flex gap-2 bg-primary text-primary-foreground hover:bg-primary/90 p-2 items-center justify-center rounded-md transition-all cursor-pointer"
+                    onClick={() => {
+                      console.log(
+                        setOpen,
+                        'setOpen after onClick event on SHeetClose shit'
+                      )
+                      setOpen(
+                        <CustomModal
+                          title="Create A Subaccount"
+                          subheading="You can switch between your agency account and the subaccount from the sidebar"
+                        >
+                          <SubAccountDetails
+                            agencyDetails={user?.Agency as Agency}
+                            userId={user?.id as string}
+                            userName={user?.name}
+                          />
+                        </CustomModal>
+                      )
+                    }}
+                  >
+                    <PlusCircleIcon size={15} />
+                    Create Sub Account
                   </SheetClose>
                 )}
               </Command>

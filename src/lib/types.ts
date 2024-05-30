@@ -1,4 +1,6 @@
-import { Role } from '@prisma/client'
+import Stripe from 'stripe'
+import { Prisma, Role } from '@prisma/client'
+import { _getTicketsWithAllRelations } from './queries'
 
 export type NotificationWithUser =
   | ({
@@ -14,3 +16,8 @@ export type NotificationWithUser =
       }
     } & Notification)[]
   | undefined
+
+export type TicketDetails = Prisma.PromiseReturnType<
+  typeof _getTicketsWithAllRelations
+>
+export type PricesList = Stripe.ApiList<Stripe.Price>
