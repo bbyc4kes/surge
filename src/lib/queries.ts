@@ -435,3 +435,21 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
     console.log(error)
   }
 }
+
+export const deleteSubAccount = async (subaccountId: string) => {
+  const response = await prisma.subAccount.delete({
+    where: {
+      id: subaccountId,
+    },
+  })
+  return response
+}
+
+export const getSubaccountDetails = async (subaccountId: string) => {
+  const response = await prisma.subAccount.findUnique({
+    where: {
+      id: subaccountId,
+    },
+  })
+  return response
+}
