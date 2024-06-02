@@ -1,8 +1,7 @@
-import { ModeToggle } from '@/components/shared/mode-toggle'
-import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import ClientNavItems from './client-navigation'
 
 type Props = {
   user?: null
@@ -31,16 +30,7 @@ const Navigation = ({ user }: Props) => {
           </li>
         </ul>
       </nav>
-      <aside className="flex gap-2 items-center">
-        <Link
-          href="/agency"
-          className="bg-primary text-white p-2 px-4 rounded-md hover:bg-primary/80 transition-colors"
-        >
-          Login
-        </Link>
-        <UserButton />
-        <ModeToggle />
-      </aside>
+      <ClientNavItems />
     </div>
   )
 }
