@@ -1,5 +1,4 @@
 import { getAuthUserDetails } from '@/lib/queries'
-import { permission } from 'process'
 import React from 'react'
 import MenuOptions from './menu-options'
 

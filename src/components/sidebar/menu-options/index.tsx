@@ -7,14 +7,14 @@ import {
   SubAccountSidebarOption,
 } from '@prisma/client'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet'
-import { Button } from '../ui/button'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../../ui/sheet'
+import { Button } from '../../ui/button'
 import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
 import clsx from 'clsx'
-import { AspectRatio } from '../ui/aspect-ratio'
+import { AspectRatio } from '../../ui/aspect-ratio'
 import Image from 'next/image'
 import { useModal } from '@/providers/modal-provider'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import {
   Command,
   CommandEmpty,
@@ -22,12 +22,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '../ui/command'
+} from '../../ui/command'
 import Link from 'next/link'
-import { Separator } from '../ui/separator'
+import { Separator } from '../../ui/separator'
 import { icons } from '@/lib/constants'
-import CustomModal from '../shared/custom-modal'
-import SubAccountDetails from '../forms/subaccount-details'
+import CustomModal from '../../shared/custom-modal'
+import SubAccountDetails from '../../forms/subaccount-details'
 
 type Props = {
   defaultOpen?: boolean
