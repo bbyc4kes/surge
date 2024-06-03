@@ -3,6 +3,7 @@ import { Prisma, Role } from '@prisma/client'
 import {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
+  getMedia,
   getUserPermissions,
 } from './queries'
 
@@ -32,3 +33,7 @@ export type AuthUserWithAgencySigebarOptionsSubAccounts =
 export type UserWithPermissionsAndSubAccounts = Prisma.PromiseReturnType<
   typeof getUserPermissions
 >
+
+export type GetMediaFiles = Prisma.PromiseReturnType<typeof getMedia>
+
+export type CreateMediaType = Prisma.MediaCreateWithoutSubaccountInput
