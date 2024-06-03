@@ -3,7 +3,7 @@
 import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import { prisma } from './db'
 import { redirect } from 'next/navigation'
-import { Agency, Plan, SubAccount, User } from '@prisma/client'
+import { Agency, Plan, Role, SubAccount, User } from '@prisma/client'
 import { v4 } from 'uuid'
 import { CreateMediaType } from './types'
 
@@ -299,6 +299,27 @@ export const getUserPermissions = async (userId: string) => {
   return response
 }
 
+export const deleteUser = async (userId: string) => {
+  await clerkClient.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      role: undefined,
+    },
+  })
+  const deletedUser = await prisma.user.delete({ where: { id: userId } })
+
+  return deletedUser
+}
+
+export const getUser = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  return user
+}
+
 export const updateUser = async (user: Partial<User>) => {
   const response = await prisma.user.update({
     where: { email: user.email },
@@ -334,6 +355,32 @@ export const changeUserPermissions = async (
   } catch (error) {
     console.log('🔴Could not change persmission', error)
   }
+}
+
+export const sendInvitation = async (
+  role: Role,
+  email: string,
+  agencyId: string
+) => {
+  const resposne = await prisma.invitation.create({
+    data: { email, agencyId, role },
+  })
+
+  try {
+    const invitation = await clerkClient.invitations.createInvitation({
+      emailAddress: email,
+      redirectUrl: process.env.NEXT_PUBLIC_URL,
+      publicMetadata: {
+        throughInvitation: true,
+        role,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+
+  return resposne
 }
 
 export const upsertSubAccount = async (subAccount: SubAccount) => {
