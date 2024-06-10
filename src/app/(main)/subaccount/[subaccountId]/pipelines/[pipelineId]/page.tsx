@@ -9,9 +9,9 @@ import {
 import { LaneDetail } from '@/lib/types'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import PipelineSettings from '../_components/pipeline-settings'
-import PipelineView from '../_components/pipeline-view'
 import PipelineInfoBar from './_components/pipeline-infobar'
+import PipelineView from './_components/pipeline-view'
+import PipelineSettings from './_components/pipeline-settings'
 
 type Props = {
   params: { subaccountId: string; pipelineId: string }

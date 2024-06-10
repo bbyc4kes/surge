@@ -13,7 +13,7 @@ import { Flag, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
-import PipelineLane from './pipeline-lane'
+import PipelineLane from '../pipelane'
 
 type Props = {
   lanes: LaneDetail[]

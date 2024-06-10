@@ -29,9 +29,9 @@ import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { Edit, MoreVertical, PlusCircleIcon, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { Dispatch, SetStateAction, useMemo } from 'react'
-import CustomModal from '@/components/global/custom-modal'
+import CustomModal from '@/components/shared/custom-modal'
 import TicketForm from '@/components/forms/ticket-form'
-import PipelineTicket from './pipeline-ticket'
+import PipelineTicket from '../pipeline-ticket'
 
 interface PipelaneLaneProps {
   setAllTickets: Dispatch<SetStateAction<TicketWithTags>>
