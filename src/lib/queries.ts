@@ -3,7 +3,16 @@
 import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import { prisma } from './db'
 import { redirect } from 'next/navigation'
-import { Agency, Plan, Role, SubAccount, User } from '@prisma/client'
+import {
+  Agency,
+  Lane,
+  Plan,
+  Prisma,
+  Role,
+  SubAccount,
+  Ticket,
+  User,
+} from '@prisma/client'
 import { v4 } from 'uuid'
 import { CreateMediaType } from './types'
 
@@ -76,6 +85,114 @@ export const createTeamUser = async (agencyId: string, userData: User) => {
   })
 
   return newUser
+}
+
+export const upsertPipeline = async (
+  pipeline: Prisma.PipelineUncheckedCreateWithoutLaneInput
+) => {
+  const response = await prisma.pipeline.upsert({
+    where: { id: pipeline.id || v4() },
+    update: pipeline,
+    create: pipeline,
+  })
+
+  return response
+}
+
+export const updateLanesOrder = async (lanes: Lane[]) => {
+  try {
+    const updateTrans = lanes.map((lane) =>
+      prisma.lane.update({
+        where: {
+          id: lane.id,
+        },
+        data: {
+          order: lane.order,
+        },
+      })
+    )
+
+    await prisma.$transaction(updateTrans)
+    console.log('🟢 Done reordered 🟢')
+  } catch (error) {
+    console.log(error, 'ERROR UPDATE LANES ORDER')
+  }
+}
+
+export const upsertLane = async (lane: Prisma.LaneUncheckedCreateInput) => {
+  let order: number
+
+  if (!lane.order) {
+    const lanes = await prisma.lane.findMany({
+      where: {
+        pipelineId: lane.pipelineId,
+      },
+    })
+
+    order = lanes.length
+  } else {
+    order = lane.order
+  }
+
+  const response = await prisma.lane.upsert({
+    where: { id: lane.id || v4() },
+    update: lane,
+    create: { ...lane, order },
+  })
+
+  return response
+}
+
+export const updateTicketsOrder = async (tickets: Ticket[]) => {
+  try {
+    const updateTrans = tickets.map((ticket) =>
+      prisma.ticket.update({
+        where: {
+          id: ticket.id,
+        },
+        data: {
+          order: ticket.order,
+          laneId: ticket.laneId,
+        },
+      })
+    )
+
+    await prisma.$transaction(updateTrans)
+    console.log('🟢 Done reordered 🟢')
+  } catch (error) {
+    console.log(error, '🔴 ERROR UPDATE TICKET ORDER')
+  }
+}
+
+export const getPipelineDetails = async (pipelineId: string) => {
+  const response = await prisma.pipeline.findUnique({
+    where: {
+      id: pipelineId,
+    },
+  })
+  return response
+}
+
+export const getLanesWithTicketAndTags = async (pipelineId: string) => {
+  const response = await prisma.lane.findMany({
+    where: {
+      pipelineId,
+    },
+    orderBy: { order: 'asc' },
+    include: {
+      Tickets: {
+        orderBy: {
+          order: 'asc',
+        },
+        include: {
+          Tags: true,
+          Assigned: true,
+          Customer: true,
+        },
+      },
+    },
+  })
+  return response
 }
 
 export const saveActivityLogsNotification = async ({

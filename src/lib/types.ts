@@ -1,11 +1,13 @@
 import Stripe from 'stripe'
-import { Prisma, Role } from '@prisma/client'
+import { Contact, Lane, Prisma, Role, Tag, Ticket, User } from '@prisma/client'
 import {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
   getMedia,
+  getPipelineDetails,
   getUserPermissions,
 } from './queries'
+import { z } from 'zod'
 
 export type NotificationWithUser =
   | ({
@@ -34,6 +36,27 @@ export type UsersWithAgencySubAccountPermissionsSidebarOptions =
   Prisma.PromiseReturnType<
     typeof __getUsersWithAgencySubAccountPermissionsSidebarOptions
   >
+export type TicketAndTags = Ticket & {
+  Tags: Tag[]
+  Assigned: User | null
+  Customer: Contact | null
+}
+
+export type LaneDetail = Lane & {
+  Tickets: TicketAndTags[]
+}
+
+export const CreatePipelineFormSchema = z.object({
+  name: z.string().min(1),
+})
+
+export const LaneFormSchema = z.object({
+  name: z.string().min(1),
+})
+
+export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
+  typeof getPipelineDetails
+>
 
 const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
   agencyId: string
