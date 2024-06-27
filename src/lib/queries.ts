@@ -69,6 +69,17 @@ export const createMedia = async (
   return response
 }
 
+export const upsertContact = async (
+  contact: Prisma.ContactUncheckedCreateInput
+) => {
+  const response = await prisma.contact.upsert({
+    where: { id: contact.id || v4() },
+    update: contact,
+    create: contact,
+  })
+  return response
+}
+
 export const deleteMedia = async (mediaId: string) => {
   const response = await prisma.media.delete({
     where: {
