@@ -55,6 +55,13 @@ export const ContactUserFormSchema = z.object({
 
 const currencyNumberRegex = /^\d+(\.\d{1,2})?$/
 
+export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput
+
+export const FunnelPageSchema = z.object({
+  name: z.string().min(1),
+  pathName: z.string().optional(),
+})
+
 export const TicketFormSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
