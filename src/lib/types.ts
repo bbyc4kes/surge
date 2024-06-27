@@ -3,6 +3,7 @@ import { Contact, Lane, Prisma, Role, Tag, Ticket, User } from '@prisma/client'
 import {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
+  getFunnels,
   getMedia,
   getPipelineDetails,
   getTicketsWithTags,
@@ -54,6 +55,13 @@ export const ContactUserFormSchema = z.object({
 
 const currencyNumberRegex = /^\d+(\.\d{1,2})?$/
 
+export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput
+
+export const FunnelPageSchema = z.object({
+  name: z.string().min(1),
+  pathName: z.string().optional(),
+})
+
 export const TicketFormSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
@@ -61,6 +69,17 @@ export const TicketFormSchema = z.object({
     message: 'Value must be a valid price.',
   }),
 })
+
+export const CreateFunnelFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string(),
+  subDomainName: z.string().optional(),
+  favicon: z.string().optional(),
+})
+
+export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+  typeof getFunnels
+>[0]
 
 export const CreatePipelineFormSchema = z.object({
   name: z.string().min(1),

@@ -15,7 +15,13 @@ import {
   User,
 } from '@prisma/client'
 import { v4 } from 'uuid'
-import { CreateMediaType } from './types'
+import {
+  CreateFunnelFormSchema,
+  CreateMediaType,
+  UpsertFunnelPage,
+} from './types'
+import { z } from 'zod'
+import { revalidatePath } from 'next/cache'
 
 export const getAuthUserDetails = async () => {
   const authUser = await currentUser()
@@ -62,6 +68,107 @@ export const createMedia = async (
     data: {
       link: mediaFile.link,
       name: mediaFile.name,
+      subAccountId: subaccountId,
+    },
+  })
+
+  return response
+}
+
+export const getFunnels = async (subacountId: string) => {
+  const funnels = await prisma.funnel.findMany({
+    where: { subAccountId: subacountId },
+    include: { FunnelPages: true },
+  })
+
+  return funnels
+}
+
+export const getFunnel = async (funnelId: string) => {
+  const funnel = await prisma.funnel.findUnique({
+    where: { id: funnelId },
+    include: {
+      FunnelPages: {
+        orderBy: {
+          order: 'asc',
+        },
+      },
+    },
+  })
+
+  return funnel
+}
+
+export const deleteFunnelePage = async (funnelPageId: string) => {
+  const response = await prisma.funnelPage.delete({
+    where: { id: funnelPageId },
+  })
+
+  return response
+}
+
+export const getFunnelPageDetails = async (funnelPageId: string) => {
+  const response = await prisma.funnelPage.findUnique({
+    where: {
+      id: funnelPageId,
+    },
+  })
+
+  return response
+}
+
+export const upsertFunnelPage = async (
+  subaccountId: string,
+  funnelPage: UpsertFunnelPage,
+  funnelId: string
+) => {
+  if (!subaccountId || !funnelId) return
+  const response = await prisma.funnelPage.upsert({
+    where: { id: funnelPage.id || '' },
+    update: { ...funnelPage },
+    create: {
+      ...funnelPage,
+      content: funnelPage.content
+        ? funnelPage.content
+        : JSON.stringify([
+            {
+              content: [],
+              id: '__body',
+              name: 'Body',
+              styles: { backgroundColor: 'white' },
+              type: '__body',
+            },
+          ]),
+      funnelId,
+    },
+  })
+
+  revalidatePath(`/subaccount/${subaccountId}/funnels/${funnelId}`, 'page')
+  return response
+}
+
+export const updateFunnelProducts = async (
+  products: string,
+  funnelId: string
+) => {
+  const data = await prisma.funnel.update({
+    where: { id: funnelId },
+    data: { liveProducts: products },
+  })
+  return data
+}
+
+export const upsertFunnel = async (
+  subaccountId: string,
+  funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
+  funnelId: string
+) => {
+  const response = await prisma.funnel.upsert({
+    where: { id: funnelId },
+    update: funnel,
+    create: {
+      ...funnel,
+      id: funnelId || v4(),
       subAccountId: subaccountId,
     },
   })
